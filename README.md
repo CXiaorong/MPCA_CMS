@@ -15,16 +15,23 @@ Example of Q file input to algorithm, Both their rows and columns represent gene
 
 ## Output: a set of genes corresponding to submatrix M;	
 	A gene set and its corresponding fitness function value.
- For example: GBM dataset, k=5, the result is: 
-
- ## Steps:
+ For example: GBM dataset, k=6, the result is: "CDKN2A" "EGFR"   "ERBB2"  "MDM2"   "PIK3R1" "TP53" , "2.31534391534392"
  
+ ## Steps:
 ### 1.Install and load the parallel package.
     install.packages('doParallel')
     library(doParallel)
 ### 2.First select the functions and run it.
+![image](https://github.com/CXiaorong/MPCA_CMS/assets/105973069/eb96a0b3-e91d-452e-a6d3-f301be06c424)
+
 ### 3.load data
+![image](https://github.com/CXiaorong/MPCA_CMS/assets/105973069/eee4559d-ab4d-4917-bd2f-46a7a85792ff)
+
 ### 4.Initialization parameters.
+![image](https://github.com/CXiaorong/MPCA_CMS/assets/105973069/7ad30ecc-33e8-4652-963c-e66eff5df032)
+
 ### 5.Iterative loop
+![image](https://github.com/CXiaorong/MPCA_CMS/assets/105973069/d00bf869-cd98-47bf-84f2-0b9e5e3ef63b)
+
 
  
