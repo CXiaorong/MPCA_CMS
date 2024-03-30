@@ -15,7 +15,7 @@ Example of Q file input to algorithm, Both their rows and columns represent gene
 
 ## Output: a set of genes corresponding to submatrix M;	
 	A gene set and its corresponding fitness function value.
- For example: GBM dataset, k=6, the result is: "CDKN2A" "EGFR"   "ERBB2"  "MDM2"   "PIK3R1" "TP53" , "2.31534391534392"
+ For example: GBM dataset, k=3, the result is: "CDKN2A" "MDM2"   "TP53"  , "2.85873015873016"
  
  ## Steps:
 ### 1.Install and load the parallel package.
