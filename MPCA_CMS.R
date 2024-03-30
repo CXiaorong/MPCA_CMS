@@ -238,8 +238,8 @@ GA2 <- function(pop){
 
 #function(9): GA6 function
 GA6 <- function(pop){  
-  r1=0.5 #交叉概率
-  r2=0.6 #突变概率
+  r1=0.5 
+  r2=0.6 
   r3=0.6 
   I <- order(pop[,k+4],decreasing = T) 
   pop <- pop[I,]
@@ -431,20 +431,20 @@ second_like_data=second_like_data[,-1]
 second_like_data=as.matrix(second_like_data)
 
 #OVCA
-SNV_data<-read.csv('E:/data/OV/313x2547/OV_SNV_2547.csv')
-GE_data<-read.csv('E:/data/OV/313x2547/OV_GE_2547.csv')
-second_like_data<-read.csv('E:/data/OV/313x2547/second_like_data_hint_2547.csv')
-rownames(second_like_data)=second_like_data[,1]
-second_like_data=second_like_data[,-1]
-second_like_data=as.matrix(second_like_data)
+#SNV_data<-read.csv('E:/data/OV/313x2547/OV_SNV_2547.csv')
+#GE_data<-read.csv('E:/data/OV/313x2547/OV_GE_2547.csv')
+#second_like_data<-read.csv('E:/data/OV/313x2547/second_like_data_hint_2547.csv')
+#rownames(second_like_data)=second_like_data[,1]
+#second_like_data=second_like_data[,-1]
+#second_like_data=as.matrix(second_like_data)
 
 #KIRC
-SNV_data<-read.csv('E:/data/KIRC/332x5804/SNV_332x5804.csv')
-GE_data<-read.csv('E:/data/KIRC/332x5804/GE_332x5804.csv')
-second_like_data<-read.csv('E:/data/KIRC/332x5804/second_like_data_332x5804.csv')
-rownames(second_like_data)=second_like_data[,1]
-second_like_data=second_like_data[,-1]
-second_like_data=as.matrix(second_like_data)
+#SNV_data<-read.csv('E:/data/KIRC/332x5804/SNV_332x5804.csv')
+#GE_data<-read.csv('E:/data/KIRC/332x5804/GE_332x5804.csv')
+#second_like_data<-read.csv('E:/data/KIRC/332x5804/second_like_data_332x5804.csv')
+#rownames(second_like_data)=second_like_data[,1]
+#second_like_data=second_like_data[,-1]
+#second_like_data=as.matrix(second_like_data)
 
 #2. processing data
 rownames(SNV_data)<-SNV_data[,1]
