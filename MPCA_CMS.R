@@ -26,7 +26,7 @@ cor_sum4 <- function(Like,x){
 
 
 #function(2): fitness function--CMS model
-fitness <- function(A,E,nets_weight_data,Like,P,x){
+fitness <- function(A,nets_weight_data,Like,P,x){
   temp <- matrix(0,1,n)
   temp[x] <- 1
   y <- temp
@@ -44,8 +44,8 @@ fitness <- function(A,E,nets_weight_data,Like,P,x){
   
   f_s=matrix(0,1,k+4)
   f_s[1,1:k]=index
-    if(l1==0){ 
-      f_s[1,k+2]=0 
+  if(l1==0){ 
+    f_s[1,k+2]=0 
   }else{
     f_s[1,k+2]=sum(1/(a_indexsum3))/(m1)
   }
@@ -57,6 +57,7 @@ fitness <- function(A,E,nets_weight_data,Like,P,x){
   return(f_s)
 }
 
+#function(3): Fitness function for multi-core parallel computing
 fitness4 <- function(x){
   temp <- matrix(0,1,n)
   temp[x] <- 1
@@ -75,8 +76,8 @@ fitness4 <- function(x){
   
   f_s=matrix(0,1,k+4)
   f_s[1,1:k]=index
-    if(l1==0){   
-      f_s[1,k+2]=0
+  if(l1==0){   
+    f_s[1,k+2]=0
   }else{
     f_s[1,k+2]=sum(1/(a_indexsum3))/(m1)
   }
@@ -89,7 +90,7 @@ fitness4 <- function(x){
 }
 
 
-#function(3): Compute the selection probability function.
+#function(4): Compute the selection probability function.
 select_order_fitness2 <- function(fit_vector){
   n <- length(fit_vector) 
   I <- order(fit_vector,decreasing = 'T')
@@ -106,7 +107,7 @@ select_order_fitness2 <- function(fit_vector){
   return(index1)
 }
 
-#function(4): crossover function1 
+#function(5): crossover function1 
 crossover2 <- function(parent1,parent2,n){ 
   temp22=parent1
   temp <- matrix(0,1,n) 
@@ -127,8 +128,8 @@ crossover2 <- function(parent1,parent2,n){
   return(newpop)
 }
 
-#function(5): Mutation function
-mutation_SA <- function(SNVdata,GEdata,nets_weight_data,second_like_data,MinP,popTemp,n,N){
+#function(6): Mutation function
+mutation_SA <- function(SNVdata,nets_weight_data,second_like_data,MinP,popTemp,n,N){
   popTemp2=matrix(0,2,k+4)
   popTemp2[1,]=popTemp
   pop_i=popTemp[1:k]
@@ -141,7 +142,7 @@ mutation_SA <- function(SNVdata,GEdata,nets_weight_data,second_like_data,MinP,po
   for (i in 1:N) {
     pop_j[indx[i]]=houxuan[i]
   }
-  popTemp2[2,1:(k+4)]=fitness(SNVdata,GEdata,nets_weight_data,second_like_data,MinP,pop_j)
+  popTemp2[2,1:(k+4)]=fitness(SNVdata,nets_weight_data,second_like_data,MinP,pop_j)
   if (popTemp2[2,(k+4)]>=popTemp2[1,(k+4)])
     pop_i <- pop_j
   return(pop_i)
@@ -176,25 +177,8 @@ select2 <- function(pop3,n){
   return(pop_next)
 }
 
-select3 <- function(pop3){
-  I <- order(pop3[,k+4],decreasing = T) 
-  pop3 <- pop3[I,]
-  p <- vector(length = popsize)
-  pop_next <- matrix(0, popsize,k+4)
-  pop_next[1,] <- pop3[1,] 
-  p=as.numeric(pop3[,k+4])/sum(as.numeric(pop3[,k+4]))
-  for(i in 2:popsize){ 
-    random_data=runif(1)
-    p_cumsum <- cumsum(p)
-    temp <- which(p_cumsum>=random_data)
-    index1 <- temp[1]
-    pop_next[i,] <- pop3[index1,]
-  }
-  return(pop_next)
-}
-
-##function(8): GA2 function
-GA2 <- function(pop){  
+##function(8): GA1 function
+GA1 <- function(pop){  
   I <- order(pop[,k+4],decreasing = T) 
   pop <- pop[I,]
   p <- vector(length = popsize)
@@ -208,7 +192,7 @@ GA2 <- function(pop){
     index1 <- index[1]
     index2 <- index[2]
     new_ind <- crossover2(pop[index1,(1:k)],pop[index2,1:k],n)
-     pop_next[i,1:k]=new_ind 
+    pop_next[i,1:k]=new_ind 
   }
   for(i in f1:popsize){ 
     fit_vector <-as.numeric(pop_next[,k+4])
@@ -227,7 +211,7 @@ GA2 <- function(pop){
       index1=index1+1
     }
     n4 <- ncol(SNVdata)
-    new_ind=mutation_SA(SNVdata,GEdata,nets_weight_data,second_like_data,MinP,pop[index1,],n4,1)
+    new_ind=mutation_SA(SNVdata,nets_weight_data,second_like_data,MinP,pop[index1,],n4,1)
     pop_next[i,1:k]=new_ind
     # }
   }
@@ -236,30 +220,30 @@ GA2 <- function(pop){
   return(pop_temp)
 }
 
-#function(9): GA6 function
-GA6 <- function(pop){  
+#function(9): GA2 function
+GA2 <- function(pop){  
   r1=0.5 
   r2=0.6 
   r3=0.6 
   I <- order(pop[,k+4],decreasing = T) 
   pop <- pop[I,]
-
+  
   pop_next <- matrix(0, popsize,k+4)
   pop_next1 <- matrix(0, popsize,k+4)
   pop_next2 <- matrix(0, popsize,k+4)
   pop_next3 <- matrix(0, popsize,k+4)
-
+  
   pop_next1[1,] <- pop[1,] 
   fit_vector <-as.numeric(pop[,k+4])
   n=ncol(SNVdata)
-
+  
   for(i in 1:popsize){
     index <- select_order_fitness2(fit_vector)
     index1 <- index[1]
     index2 <- index[2]
     pop_next1[i,1:k] <- crossover2(pop[index1,(1:k)],pop[index2,1:k],n)
   }
-
+  
   n4 <- ncol(SNVdata)
   for(i in 1:popsize){
     r5=runif(1)
@@ -283,7 +267,7 @@ GA6 <- function(pop){
       pop_next2[i,1:k]=pop[i,1:k]
     }
   }
-
+  
   for(i in 1:popsize){
     r6=runif(1)
     if(r6>r3){
@@ -300,7 +284,7 @@ GA6 <- function(pop){
       pop_next3[i,1:k]=pop[i,1:k]
     }
   }
-
+  
   #Three matrix connections
   pop_next=rbind(pop_next1,pop_next2,pop_next3)
   res <- parApply(cl,pop_next[,1:k],1,fitness4)
@@ -321,7 +305,7 @@ GA6 <- function(pop){
 
 
 #function(10): Gene evolution of cooperative pool
-GA9 <- function(pop){  
+GA3 <- function(pop){  
   I <- order(pop[,k+4],decreasing = T) 
   pop <- pop[I,]
   p <- vector(length = popsize)
@@ -384,7 +368,7 @@ GA9 <- function(pop){
 }
 
 #function(11): Initial population
-initPop2<-function(SNVdata,GEdata,nets_weight_data,second_like_data,MinP,k,n,popsize){
+initPop2<-function(SNVdata,nets_weight_data,second_like_data,MinP,k,n,popsize){
   x <- 1:n
   temp=matrix(0,popsize,k)
   for(i in 1:(popsize)){
@@ -418,13 +402,10 @@ significance <- function(A,E,nets_weight_data,Like,P,subset_M){
   return(p)
 }
 
-
 #start
 #1. read data
 #GBM
-
 SNV_data<-read.csv('E:/data/GBM/90x440/SNVdata_440.csv')
-GE_data<-read.csv('E:/data/GBM/90x440/GEdata_440.csv')
 second_like_data<-read.csv('E:/sourceFiles-MPCA-CMS/data/GBM/90x440/second_like_data_GBM_440.csv')
 rownames(second_like_data)=second_like_data[,1]
 second_like_data=second_like_data[,-1]
@@ -432,7 +413,6 @@ second_like_data=as.matrix(second_like_data)
 
 #OVCA
 #SNV_data<-read.csv('E:/data/OV/313x2547/OV_SNV_2547.csv')
-#GE_data<-read.csv('E:/data/OV/313x2547/OV_GE_2547.csv')
 #second_like_data<-read.csv('E:/data/OV/313x2547/second_like_data_hint_2547.csv')
 #rownames(second_like_data)=second_like_data[,1]
 #second_like_data=second_like_data[,-1]
@@ -440,7 +420,6 @@ second_like_data=as.matrix(second_like_data)
 
 #KIRC
 #SNV_data<-read.csv('E:/data/KIRC/332x5804/SNV_332x5804.csv')
-#GE_data<-read.csv('E:/data/KIRC/332x5804/GE_332x5804.csv')
 #second_like_data<-read.csv('E:/data/KIRC/332x5804/second_like_data_332x5804.csv')
 #rownames(second_like_data)=second_like_data[,1]
 #second_like_data=second_like_data[,-1]
@@ -449,11 +428,8 @@ second_like_data=as.matrix(second_like_data)
 #2. processing data
 rownames(SNV_data)<-SNV_data[,1]
 SNV_data<-SNV_data[,-1]
-rownames(GE_data)<-GE_data[,1]
-GE_data<-GE_data[,-1]
 snv_colsum<-colSums(SNV_data) 
 SNVdata<-SNV_data[,snv_colsum>1]
-GEdata<-GE_data[,which(colnames(GE_data)%in%colnames(SNVdata))]
 
 #2.Initialization Parameters
 n <- ncol(SNVdata)
@@ -466,7 +442,6 @@ cl <- makeCluster(getOption("cl.cores", 4))
 registerDoParallel(cl)       #Process registration
 clusterExport(cl, "n") 
 clusterExport(cl, "SNVdata") 
-clusterExport(cl, "GEdata")
 clusterExport(cl, "cor_sum4") 
 clusterExport(cl, "second_like_data") 
 
@@ -486,7 +461,6 @@ for (i in 1:l) {
 clusterExport(cl, "maxl")
 
 v=1
-result_parameter2=matrix(0,10,30)
 
 for(k in 2:4){
   k <-3 #set K
@@ -496,7 +470,7 @@ for(k in 2:4){
   #3.Initial population
   t1 <- Sys.time()   #start counting
   arr=c()
-  result_pop=initPop2(SNVdata,GEdata,nets_weight_data,second_like_data,MinP,k,n,2*popsize)
+  result_pop=initPop2(SNVdata,nets_weight_data,second_like_data,MinP,k,n,2*popsize)
   P1=result_pop[1:popsize,]
   P2=result_pop[(popsize+1):(2*popsize),]
   x <- 1:popsize
@@ -519,7 +493,6 @@ for(k in 2:4){
     np2=ncol(temp_pop2)
     
     if(R1*np1==(k+4)||R2*np2==(k+4)){
-      #print('finish').
       break
     }
     condition=(j%%5==0) || (R1<=popsize/2 || R2<=popsize/2)
@@ -530,7 +503,7 @@ for(k in 2:4){
       P2=P2[I,]
       source_pop[1:(popsize/2),]=P1[1:(popsize/2),]
       source_pop[(popsize/2+1):popsize,]=P2[1:(popsize/2),]
-      source_pop=GA9(source_pop)
+      source_pop=GA3(source_pop)
       
       P1=source_pop[1:popsize,]
       I=order(source_pop[,k+4],decreasing = 'T')
@@ -543,12 +516,11 @@ for(k in 2:4){
         R=0
       }
     }
-    P1=GA2(P1)
-    P2=GA6(P2)
-
+    P1=GA1(P1)
+    P2=GA2(P2)
+    
     P1 <- select2(P1,n)
     P2 <- select2(P2,n)
-    #print(j)
     j=j+1
   }
   t2 <- Sys.time() 
@@ -561,11 +533,11 @@ for(k in 2:4){
   pop <- pop[I,]
   maxpop <- pop
   maxpop[,1:k] <- apply(pop[,1:k,drop=T],2,function(x) {geneName[x]})
-
+  
   #output the optimal solution.
   print(maxpop[1,1:k])
   print(maxpop[1,(k+4)])
- 
+  
   v=v+1
 }
 stopCluster(cl)
