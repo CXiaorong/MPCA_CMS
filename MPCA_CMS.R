@@ -462,8 +462,8 @@ clusterExport(cl, "maxl")
 
 v=1
 
-for(k in 2:4){
-  k <-3 #set K
+for(k in 2:4){ 
+  k <-4 #set K
   clusterExport(cl, "k") 
   print(k)
   popsize <- floor(log2(n^k))
