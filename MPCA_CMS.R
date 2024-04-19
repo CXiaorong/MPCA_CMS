@@ -268,25 +268,8 @@ GA2 <- function(pop){
     }
   }
   
-  for(i in 1:popsize){
-    r6=runif(1)
-    if(r6>r3){
-      index=sample(1:k,1) 
-      c1=pop[,index]
-      c2=base::unique(c1) 
-      if(length(c2)<=k){
-        c2=table(pop[,1:k])
-        c2=as.numeric(names(c2))
-      }
-      new_ind=sample(c2,k)
-      pop_next3[i,1:k]=new_ind 
-    }else{
-      pop_next3[i,1:k]=pop[i,1:k]
-    }
-  }
-  
   #Three matrix connections
-  pop_next=rbind(pop_next1,pop_next2,pop_next3)
+  pop_next=rbind(pop_next1,pop_next2)
   res <- parApply(cl,pop_next[,1:k],1,fitness4)
   pop_next=t(res)
   I <- order(pop_next[,k+4],decreasing = T)
